@@ -1,0 +1,28 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+
+    </style>
+    <style name="WeatherGoodTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/WeatherGoodBackColor</item>
+    </style>
+    <style name="NoTitleAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/DefaultBackColor</item>
+    </style>
+
+    <color name="DefaultBackColor">#ffffffff</color>
+    <color name="WeatherGoodBackColor">#ff0080ff</color>
+    <color name="WeatherBadBackColor">#ff808080</color>
+
+    <style name="DefaultBackGround">
+        <item name="android:background">@color/DefaultBackColor</item>
+    </style>
+
+    <style name="WeatherGoodBackGround">
+        <item name="android:background">@color/WeatherGoodBackColor</item>
+    </style>
+
+</resources>
