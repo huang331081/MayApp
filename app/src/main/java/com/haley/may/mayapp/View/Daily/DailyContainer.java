@@ -47,19 +47,18 @@ public class DailyContainer extends BaseContainer {
         final ViewPager viewPager = (ViewPager)this.findViewById(R.id.viewPager);
 
         this.views.add(new MayListView(this.getContext()));
-        this.views.add(new DailyClassView(this.getContext()));
+        //  this.views.add(new DailyStatisticsView(getContext()));
+        this.views.add(new DailyPacketView(this.getContext()));
 
         viewPager.setAdapter(new PagerAdapter() {
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object)   {
-                Log.i("AboutUsPageAdapter", "-->>destroyItem");
                 container.removeView(views.get(position));//删除页卡
             }
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                Log.i("AboutUsPageAdapter", "-->>instantiateItem");
                 container.addView(views.get(position), 0);
                 return views.get(position);
             }

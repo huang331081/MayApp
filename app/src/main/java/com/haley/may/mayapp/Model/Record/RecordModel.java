@@ -27,19 +27,26 @@ public class RecordModel {
         SQLiteHelper.getInstance().addRecord(this.userID,date,title,text);
     }
 
+    public void deleteRecord(int index){
+        recordInfos.remove(index);
+        SQLiteHelper.getInstance().deleteRecord(userID,index);
+    }
+
     private void initRecord(){
         for (String[] strings : SQLiteHelper.getInstance().getRecord(this.userID)) {
             Log.i("RecordModel","-->>"+strings[0]+ strings[1]+strings[2]);
-            this.recordInfos.add(new RecordInfo(strings[0], strings[1], strings[2]));
+            this.recordInfos.add(new RecordInfo(Integer.parseInt(strings[0]), strings[1], strings[2],strings[3]));
         }
     }
 
     public class RecordInfo{
+        private int id;
         private String date;
         private String title;
         private String text;
 
-        public RecordInfo(String date,String title,String text){
+        public RecordInfo(int id,String date,String title,String text){
+            this.id = id;
             this.date = date;
             this.title = title;
             this.text = text;

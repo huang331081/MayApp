@@ -214,6 +214,14 @@ public class SQLiteHelper {
         Log.i("SQLite", "addRecord-->>"+date+title+text);
     }
 
+    public void deleteRecord(int userid,int id){
+        SQLiteDatabase db;
+        Cursor cursor;
+
+        db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath+this.dataBaseName, null);
+        db.execSQL("delete from Record where id=?",new Object[]{id});
+    }
+
     public List<String[]> getRecord(int userid){
         SQLiteDatabase db;
         Cursor cursor;
@@ -221,7 +229,7 @@ public class SQLiteHelper {
         int count = 0;
 
         db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath + this.dataBaseName, null);
-        cursor = db.rawQuery("select date((select datetime(date,'unixepoch'))) as date,title,text from Record where user_id=? order by date", new String[]{Integer.toString(userid)});
+        cursor = db.rawQuery("select id, date((select datetime(date,'unixepoch'))) as date,title,text from Record where user_id=? order by date", new String[]{Integer.toString(userid)});
         count = cursor.getCount();
 
 
@@ -229,7 +237,7 @@ public class SQLiteHelper {
         if ( cursor != null ) {
             if ( cursor.moveToFirst() ){
                 do {
-                    list.add(new String[]{cursor.getString(0), cursor.getString(1), cursor.getString(2)});
+                    list.add(new String[]{cursor.getString(0), cursor.getString(1), cursor.getString(2),cursor.getString(3)});
                 }while ( cursor.moveToNext() );
             }
         }
@@ -243,23 +251,40 @@ public class SQLiteHelper {
     //endregion
 
     //region Packet
-    public void addPacket(int userid,String packet){
+    public int addPacket(int userid,String packet){
         SQLiteDatabase db;
         Cursor cursor;
         int count = 0;
 
         db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath+this.dataBaseName, null);
-        cursor = db.rawQuery("select count(id) as count from Packet where user_id=? and packet=?", new String[]{Integer.toString(userid), packet});
+        cursor = db.rawQuery("select count(id),id as count from Packet where user_id=? and packet=?", new String[]{Integer.toString(userid), packet});
         if(cursor.moveToFirst()) {
             count = Integer.parseInt(cursor.getString(0));
         }
 
         if(count == 1)
-            return;
+            return cursor.getInt(1);
 
         db.execSQL("INSERT INTO Packet(user_id,packet) VALUES(?,?)", new Object[]{userid, packet});
 
+        cursor = db.rawQuery("select id from Packet where user_id=? and packet=?", new String[]{Integer.toString(userid),packet});
+        if(cursor.moveToFirst()) {
+            count = Integer.parseInt(cursor.getString(0));
+        }
+
         db.close();
+
+        return count;
+    }
+
+    public void deletePacket(int userid,int packetID){
+        SQLiteDatabase db;
+        Cursor cursor;
+
+        db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath+this.dataBaseName, null);
+        db.execSQL("update Label set packet_id=? where user_id=? and packet_id=?", new Object[]{0, Integer.toString(userid), Integer.toString(packetID)});
+
+        db.execSQL("delete from Packet where id=?", new Object[]{Integer.toString(packetID)});
     }
 
     public List<String[]> getPacket(int userid){
@@ -284,6 +309,15 @@ public class SQLiteHelper {
         db.close();
         Log.i("SQLite", "PacketCount-->>" + Integer.toString(count));
         return list;
+    }
+
+    public void updatePacketOfLabel(int userid,String label,int packetID){
+        SQLiteDatabase db;
+        Cursor cursor;
+
+        db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath + this.dataBaseName, null);
+        db.execSQL("update Label set packet_id=? where user_id=? and label=?", new Object[]{Integer.toString(packetID), Integer.toString(userid), label});
+
     }
     //endregion
 }
