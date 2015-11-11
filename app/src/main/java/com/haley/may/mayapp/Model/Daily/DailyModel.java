@@ -18,7 +18,7 @@ public class DailyModel {
     private List<DailyInfo> dailyInfoList = new ArrayList<DailyInfo>();
     private DailyModeDateSelector dailyModeDateSelector;
 
-    private DailyStatistics dailyStatistics;
+    private DailyStatistics dailyStatistics = null;
 
     private static LabelCollection labelCollection = null;
     //endregion
@@ -29,6 +29,7 @@ public class DailyModel {
         SQLiteHelper.getInstance().addDaily(this.userID, new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date(System.currentTimeMillis())));
 
         labelCollection = new LabelCollection(this.userID);
+
         this.dailyModeDateSelector = new DailyModeDateSelector(SQLiteHelper.getInstance().getStartDaily(this.userID),new Date(System.currentTimeMillis()));
 
 
@@ -37,10 +38,6 @@ public class DailyModel {
     //endregion
 
     //region set get
-    public String getUserName(){
-        return userName;
-    }
-
     public List<DailyInfo> getDailyInfoList(){
         return dailyInfoList;
     }
@@ -52,23 +49,29 @@ public class DailyModel {
     public static LabelCollection getLabelCollection() {
         return labelCollection;
     }
+
+    public DailyStatistics getDailyStatistics() {
+        return dailyStatistics;
+    }
+
     //endregion
 
     //region function
     public void init(){
         this.dailyInfoList.clear();
-        SQLiteHelper.getInstance().getDaily(this.userID,this.dailyModeDateSelector.getModeDates().get(this.dailyModeDateSelector.getSelectedDate()).getStartDateString(),this.dailyModeDateSelector.getModeDates().get(this.dailyModeDateSelector.getSelectedDate()).getEndDateString(),this);
+        for (String[] params : SQLiteHelper.getInstance().getDaily(this.userID,this.dailyModeDateSelector.getModeDates().get(this.dailyModeDateSelector.getSelectedDate()).getStartDateString(),this.dailyModeDateSelector.getModeDates().get(this.dailyModeDateSelector.getSelectedDate()).getEndDateString())){
+            this.dailyInfoList.add( new DailyInfo(params[0], params[1], params[5]));
+        }
     }
 
-    public void AddDailyInfo(String id,String date,String breakfast,String lunch,String dinner,String other) {
-        DailyInfo info = new DailyInfo(id, date, other);
-        this.dailyInfoList.add(info);
+    public void initStatistics(){
+        this.dailyStatistics = new DailyStatistics(this.userID,this.dailyModeDateSelector.getModeDates(0),this.dailyModeDateSelector.getModeDates(1));
     }
     //endregion
 
     //region OnInitDailyInfoListen
     public interface OnInitDailyInfoListen{
-        public void onInitDailyInfo();
+        void onInitDailyInfo();
     }
 
     private OnInitDailyInfoListen onInitDailyInfoListen = null;

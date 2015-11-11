@@ -9,5 +9,5 @@ import com.haley.may.mayapp.Manager.StyleManager;
  */
 public interface IStyleChange {
 
-    public void setStyle(StyleManager.StyleInfo previousStyle,StyleManager.StyleInfo style);
+    void setStyle(StyleManager.StyleInfo previousStyle,StyleManager.StyleInfo style);
 }

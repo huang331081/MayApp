@@ -50,7 +50,7 @@ public class DailyInfoPanel extends StretchPanel{
     public DailyInfoPanel(Context context) {
         super(context, null);
 
-        final View contentView = View.inflate(context, R.layout.layout_dailyinfo, null);
+        final View contentView = View.inflate(context, R.layout.layout_dailyinfoitem, null);
         final View stretchView = new RelativeLayout(context);
 
         stretchView.setBackgroundColor(0xffa0a0a0);
@@ -97,6 +97,9 @@ public class DailyInfoPanel extends StretchPanel{
     public void setModel(DailyInfo model, final MayListView parentView){
         this.parentListView = parentView;
         this.dailyInfo = model;
+
+        ((RelativeLayout)this.stretchView).removeAllViews();
+        this.stretchView.invalidate();
 
         //设置标题
         this.setTitle();
@@ -292,7 +295,8 @@ public class DailyInfoPanel extends StretchPanel{
 
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
+                        //if (convertView == null) {
+                        {
                             TextView textView = new TextView(DailyInfoPanel.this.getContext());
                             textView.setText(DailyModel.getLabelCollection().getLabelInfoList().get(position).toString());
                             textView.setTextSize(16);

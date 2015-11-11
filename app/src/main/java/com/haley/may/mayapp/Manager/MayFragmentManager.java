@@ -1,12 +1,22 @@
 package com.haley.may.mayapp.Manager;
 
+import android.app.Application;
+import android.app.Fragment;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.nplatform.comapi.map.gesture.Base;
 import com.haley.may.mayapp.Interface.IStyleChange;
+import com.haley.may.mayapp.R;
+import com.haley.may.mayapp.View.Base.BaseContainer;
 import com.haley.may.mayapp.View.Daily.DailyContainer;
+import com.haley.may.mayapp.View.Map.MapContainer;
 import com.haley.may.mayapp.View.Record.RecordContainer;
 import com.haley.may.mayapp.View.Weather.WeatherContainer;
 
@@ -14,72 +24,103 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 单例模式
+ * 用于创建、管理fragment的类
  * Created by haley on 2015/10/22.
  */
 public class MayFragmentManager {
+
+    //region variable
     private static String TAG = "MayFragmentManager";
+    private FragmentInfo showingFragment = null;
+    private List<FragmentInfo> fragmentInfos = new ArrayList<FragmentInfo>();
+    //endregion
 
-    private List<String> viewTitles = new ArrayList<String>();
-    private List<View> views = new ArrayList<View>();
-
+    //region single case
     private static MayFragmentManager instance = new MayFragmentManager();
-
     public static MayFragmentManager getInstance(){
         return instance;
     }
-
     private MayFragmentManager() {
-        viewTitles.add("天气");
-        viewTitles.add("账单");
-        viewTitles.add("记录");
+        fragmentInfos.add(new FragmentInfo("天气"));
+        fragmentInfos.add(new FragmentInfo("账单"));
+        fragmentInfos.add(new FragmentInfo("记录"));
+        fragmentInfos.add(new FragmentInfo("地图"));
+    }
+    //endregion
 
-        for (String string : viewTitles){
-            views.add(null);
+
+    public FragmentInfo getShowingFragment() {
+        return showingFragment;
+    }
+
+    public List<String> getTitles(){
+        List<String> list = new ArrayList<String>();
+
+        for (FragmentInfo fragmentInfo : this.fragmentInfos){
+            list.add(fragmentInfo.title);
         }
+
+        return list;
     }
 
-    public List<String> getViewTitles() {
-        return viewTitles;
+    /**
+     * 初始化所有view
+     * @param inflater
+     */
+    public void initViews(LayoutInflater inflater){
+//        for (int i=0; i<this.views.size(); i++){
+//            if (this.views.get(i) == null && i != 3){
+//                this.getView(i+1,inflater,null);
+//            }
+//        }
     }
 
+    /**
+     * 获取对应fragment的view
+     * @param position
+     * @param inflater
+     * @param container
+     * @return
+     */
     public View getView(int position, LayoutInflater inflater,ViewGroup container){
         position--;
 
-        if (views.size() < position)
+        if (fragmentInfos.size() < position)
             return null;
 
-        Log.i(TAG,"getView-->>" + this.viewTitles.get(position));
-        switch (position){
-            case 0:
-                if (views.get(position) == null) {
-                    views.set(position, this.createWeahterView(inflater,container));
-                    ((IStyleChange) this.views.get(position)).setStyle(StyleManager.getInstance().getPreviousStyle(),StyleManager.getInstance().getStyle());
-                }
-                return views.get(position);
-            case 1:
-                if (views.get(position) == null) {
-                    views.set(position,this.createDailyView(inflater,container));
-                    ((IStyleChange) this.views.get(position)).setStyle(StyleManager.getInstance().getPreviousStyle(),StyleManager.getInstance().getStyle());
-                }
-                return views.get(position);
-            case 2:
-                if (views.get(position) == null){
-                    views.set(position,this.createRecordView(inflater,container));
-                    ((IStyleChange) this.views.get(position)).setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
-                }
-                return views.get(position);
+        this.showingFragment = fragmentInfos.get(position);
+
+        if (fragmentInfos.get(position).container == null) {
+            switch (position) {
+                case 0:
+                    fragmentInfos.get(position).container = ((BaseContainer) this.createWeatherView(inflater, container));
+                    break;
+                case 1:
+                    fragmentInfos.get(position).container = ((BaseContainer) this.createDailyView(inflater, container));
+                    break;
+                case 2:
+                    fragmentInfos.get(position).container = ((BaseContainer) this.createRecordView(inflater, container));
+                    break;
+                case 3:
+                    fragmentInfos.get(position).container = ((BaseContainer) this.createMapView(inflater, container));
+                    break;
+            }
         }
-        return null;
+
+        fragmentInfos.get(position).container.setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
+        return fragmentInfos.get(position).container;
     }
 
     public void setStyle(){
-        for (int i=0 ;i<this.views.size();i++)
-            if (this.views.get(0) != null)
-                ((IStyleChange) this.views.get(0)).setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
+        for (int i=0 ;i<this.fragmentInfos.size();i++)
+            if (this.fragmentInfos.get(i).container != null)
+                fragmentInfos.get(i).container.setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
     }
+    //endregion
 
-    private View createWeahterView(final LayoutInflater inflater,ViewGroup container){
-        //inflater.inflate(R.layout.activity_main_test,container,false)
+    //region private function
+    private View createWeatherView(final LayoutInflater inflater,ViewGroup container){
         return new WeatherContainer(inflater.getContext());
     }
 
@@ -89,5 +130,25 @@ public class MayFragmentManager {
 
     private View createRecordView(final LayoutInflater inflater,ViewGroup container){
         return new RecordContainer(inflater.getContext());
+    }
+
+    private View createMapView(final LayoutInflater inflater,ViewGroup container){
+        return new MapContainer(inflater.getContext());
+    }
+    //endregion
+
+
+    //
+    public class FragmentInfo{
+        private String title;
+        private BaseContainer container = null;
+
+        public FragmentInfo(String title){
+            this.title = title;
+        }
+
+        public void initActionBar(MenuInflater inflater,Menu menu){
+            this.container.initMenu(inflater,menu);
+        }
     }
 }

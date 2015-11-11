@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:orientation="horizontal"
+    android:background="#ffa0a0a0"
+    android:layout_width="match_parent" android:layout_height="50dp">
+
+    <TextView android:id="@+id/textViewDate"
+        android:text="2015-11-11\n总计=0"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"/>
+    <Button android:id="@+id/addButton"
+        android:text="+"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+

@@ -5,19 +5,17 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.haley.may.mayapp.Model.Daily.DailyModel;
 import com.haley.may.mayapp.R;
 import com.haley.may.mayapp.View.Base.BaseContainer;
-import com.haley.may.mayapp.View.Base.MayListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +41,28 @@ public class DailyContainer extends BaseContainer {
         this.initViewPager();
     }
 
+    @Override
+    public void initMenu(MenuInflater inflater, Menu menu) {
+        super.initMenu(inflater, menu);
+
+        inflater.inflate(R.menu.daily,menu);
+
+        final Spinner spinnerMode = (Spinner)menu.findItem(R.id.actionbar_daily_mode).getActionView();
+        final Spinner spinnerDate = (Spinner) menu.findItem(R.id.actionbar_daily_date).getActionView();
+
+        //赋值adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_dropdown_item,this.dailyModel.getDailyModeDateSelector().getModes());
+        spinnerMode.setAdapter(adapter);
+
+        adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_spinner_dropdown_item,this.dailyModel.getDailyModeDateSelector().getModeDatesString());
+        spinnerDate.setAdapter(adapter);
+    }
+
     public void initViewPager(){
         final ViewPager viewPager = (ViewPager)this.findViewById(R.id.viewPager);
 
-        this.views.add(new MayListView(this.getContext()));
-        //  this.views.add(new DailyStatisticsView(getContext()));
+        this.views.add(new DailyInfoView(getContext(),dailyModel));
+        this.views.add(new DailyStatisticsView(getContext(),dailyModel));
         this.views.add(new DailyPacketView(this.getContext()));
 
         viewPager.setAdapter(new PagerAdapter() {
@@ -91,11 +106,10 @@ public class DailyContainer extends BaseContainer {
         spinnerMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("","select-->>"+ position);
+                Log.i("", "select-->>" + position);
                 dailyModel.getDailyModeDateSelector().setSelectedMode(position);
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,dailyModel.getDailyModeDateSelector().getModeDatesString());
-                spinnerDate.setAdapter(null);
                 spinnerDate.setAdapter(adapter);
             }
 
@@ -111,34 +125,9 @@ public class DailyContainer extends BaseContainer {
                 dailyModel.getDailyModeDateSelector().setSelectedDate(position);
                 dailyModel.init();
 
-                //ListView listView = (ListView)findViewById(R.id.listView);
-                ListView listView = (ListView)views.get(0);
-                listView.setAdapter(new BaseAdapter() {
-                    @Override
-                    public int getCount() {
-                        return dailyModel.getDailyInfoList().size();
-                    }
-
-                    @Override
-                    public Object getItem(int position) {
-                        return dailyModel.getDailyInfoList().get(position);
-                    }
-
-                    @Override
-                    public long getItemId(int position) {
-                        return position;
-                    }
-
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
-
-                            convertView = new DailyInfoPanel(DailyContainer.this.getContext());
-                            ((DailyInfoPanel) convertView).setModel(dailyModel.getDailyInfoList().get(position), (MayListView) parent);
-                        }
-                        return convertView;
-                    }
-                });
+                //dailyview更新显示
+                DailyInfoView dailyInfoView = (DailyInfoView)views.get(0);
+                dailyInfoView.initAdapter();
             }
 
             @Override

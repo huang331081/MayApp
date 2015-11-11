@@ -18,8 +18,8 @@ public class StretchPanel extends LinearLayout {
 
     private static final String TAG = StretchPanel.class.getSimpleName();
 
-    private View contentView;
-    private View stretchView;
+    protected View contentView;
+    protected View stretchView;
 
     private int stretchHeight;
     private OnStretchListener mListener;

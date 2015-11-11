@@ -62,6 +62,7 @@ public class DailyPacketView extends RelativeLayout {
     //region private function
     private void init(){
 
+        //已分配的类别
         listViewPacket = (ListView)this.findViewById(R.id.listViewPacket);
         listViewPacket.setAdapter(listViewPacketAdapter = new BaseAdapter() {
             @Override
@@ -85,74 +86,83 @@ public class DailyPacketView extends RelativeLayout {
 
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    LinearLayout linearLayout = new LinearLayout(getContext());
+                LinearLayout linearLayout = null;
+                //if (convertView == null) {
+                {
+                    linearLayout = new LinearLayout(getContext());
                     linearLayout.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-
+                    convertView = linearLayout;
                     //convertView = new PacketView(getContext(),DailyModel.getLabelCollection().getPacketInfos().get(position));//new PacketGridView(getContext(),DailyModel.getLabelCollection().getPacketInfos().get(position));//
-
-                    Log.i("DailyClassView","getView-->>"+ DailyModel.getLabelCollection().getPacketInfos().size());
-
-                    if (position < DailyModel.getLabelCollection().getPacketInfos().size()) {
-                        linearLayout.setOrientation(LinearLayout.VERTICAL);
-                        Button button = new Button(getContext());
-                        button.setText(DailyModel.getLabelCollection().getPacketInfos().get(position).getPacketName());
-                        linearLayout.addView(button);
-                        linearLayout.addView(new PacketGridView(getContext(),DailyModel.getLabelCollection().getPacketInfos().get(position)));
-                        convertView = linearLayout;
-
-                        button.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Dialog dialog = new AlertDialog.Builder(getContext())
-                                        .setTitle("删除")
-                                        .setMessage("确定要删除吗？")
-                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                DailyModel.getLabelCollection().deletePacket(DailyModel.getLabelCollection().getPacketInfos().get(position));
-                                                listViewPacket.setAdapter(listViewPacketAdapter);
-
-                                                listViewLabel.setAdapter(listViewLabelAdapter);
-                                            }
-                                        })
-                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .create();
-
-                                dialog.show();
-                            }
-                        });
-                    }
-                    else {
-                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        final EditText editText = new EditText(getContext());editText.setSingleLine(true); editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-                        Button button = new Button(getContext());button.setText("+");button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
-                        linearLayout.addView(editText);
-                        linearLayout.addView(button);
-                        convertView = linearLayout;
-
-                        button.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (DailyModel.getLabelCollection().addPacket(editText.getText().toString()))
-                                    listViewPacket.setAdapter(listViewPacketAdapter);
-                            }
-                        });
-                    }
                 }
-                else{
 
+                linearLayout.removeAllViews();
+
+                if (position < DailyModel.getLabelCollection().getPacketInfos().size()) {
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    Button button = new Button(getContext());
+                    button.setText(DailyModel.getLabelCollection().getPacketInfos().get(position).getPacketName());
+                    linearLayout.addView(button);
+                    linearLayout.addView(new PacketGridView(getContext(),DailyModel.getLabelCollection().getPacketInfos().get(position)));
+
+                    button.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+
+                    button.setOnLongClickListener(new OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Dialog dialog = new AlertDialog.Builder(getContext())
+                                    .setTitle("删除")
+                                    .setMessage("确定要删除吗？")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DailyModel.getLabelCollection().deletePacket(DailyModel.getLabelCollection().getPacketInfos().get(position));
+                                            listViewPacket.setAdapter(listViewPacketAdapter);
+
+                                            listViewLabel.setAdapter(listViewLabelAdapter);
+                                        }
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+
+                            dialog.show();
+                            return false;
+                        }
+                    });
                 }
+                else {
+                    linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    final EditText editText = new EditText(getContext());editText.setSingleLine(true); editText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+                    Button button = new Button(getContext());
+                    button.setText("+");
+                    button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 3));
+                    linearLayout.addView(editText);
+                    linearLayout.addView(button);
+
+
+                    button.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (DailyModel.getLabelCollection().addPacket(editText.getText().toString()))
+                                listViewPacket.setAdapter(listViewPacketAdapter);
+                        }
+                    });
+                }
+
                 return convertView;
             }
         });
 
-
+        //未分配的label
         listViewLabel = (ListView)this.findViewById(R.id.listViewLabel);
         listViewLabel.setAdapter(listViewLabelAdapter = new BaseAdapter() {
             @Override
@@ -172,7 +182,8 @@ public class DailyPacketView extends RelativeLayout {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
+                //if (convertView == null) {
+                {
                     LabelButton button = new LabelButton(getContext(), DailyModel.getLabelCollection().getUnsignedLables().get(position).getLabel(), false);
                     convertView = button;
                 }
@@ -230,7 +241,8 @@ public class DailyPacketView extends RelativeLayout {
 
                 @Override
                 public View getView(int p, View convertView, ViewGroup parent) {
-                    if (convertView == null) {
+                    //if (convertView == null) {
+                    {
                         convertView = new LabelButton(getContext(), packetInfo.getLabels().get(p), true);
                     }
                     return convertView;

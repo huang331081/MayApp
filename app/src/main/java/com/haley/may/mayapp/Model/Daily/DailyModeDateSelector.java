@@ -19,7 +19,7 @@ public class DailyModeDateSelector {
     private Date startDate,endDate;
     private List<ModeDate> modeDates = new ArrayList<ModeDate>();
 
-    private final int dayMilSecond = 86400000;
+    private final long dayMilSecond = 86400000;
 
     private int selectedMode = -1;
     private int selectedDate = 0;
@@ -34,6 +34,7 @@ public class DailyModeDateSelector {
     }
     //endregion
 
+    //region functon
     public String[] getModes() {
         return modes;
     }
@@ -66,37 +67,45 @@ public class DailyModeDateSelector {
             return;
 
         this.selectedMode = selectedMode;
-        Log.i("DailyModeDateSelector","setSelectedMode-->>"+ this.modes[this.selectedMode]);
-        Log.i("DailyModeDateSelector", "-->>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startDate) + " " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate));
-        this.modeDates.clear();
-        if (this.modes[this.selectedMode].equals("Week")){
-            for (Date weekStart = new Date(startDate.getTime()) ; weekStart.getTime() < this.endDate.getTime();) {
-                Date weekEnd = new Date(weekStart.getTime() + dayMilSecond * (7 - getDayOfWeek(weekStart)));
-
-                this.modeDates.add(new ModeDate("Week",weekStart,weekEnd.getTime() <= this.endDate.getTime() ?  weekEnd : this.endDate));
-
-                weekStart.setTime(weekEnd.getTime() + dayMilSecond);
-            }
-        }
-        else
-        if (this.modes[this.selectedMode].equals("Month")){
-            for (Date monthStart = new Date(startDate.getTime()) ; monthStart.getTime() < this.endDate.getTime();) {
-                Date monthEnd = new Date(monthStart.getTime() + dayMilSecond * (getMonthDays(monthStart) - getDayOfMonth(monthStart)));
-
-                this.modeDates.add(new ModeDate("Month",monthStart,monthEnd.getTime() <= this.endDate.getTime() ? monthEnd : this.endDate));
-
-                monthStart.setTime(monthEnd.getTime() + dayMilSecond);
-            }
-        }
-        if (this.modes[this.selectedMode].equals("All")){
-            this.modeDates.add(new ModeDate("All",this.startDate,this.endDate));
-        }
+        this.modeDates = this.getModeDates(this.selectedMode);
 
         Collections.reverse(this.modeDates);
     }
 
     public void setSelectedDate(int selectedDate) {
         this.selectedDate = selectedDate;
+
+        //暂无用
+        this.invokeOnDateChanged();
+    }
+
+    public List<ModeDate> getModeDates(int mode){
+        List<ModeDate> modeDates = new ArrayList<ModeDate>();
+
+        if (this.modes[mode].equals("Week")){
+            for (Date weekStart = new Date(startDate.getTime()) ; weekStart.getTime() < this.endDate.getTime();) {
+                Date weekEnd = new Date(weekStart.getTime() + dayMilSecond * (7 - getDayOfWeek(weekStart)));
+
+                modeDates.add(new ModeDate("Week",weekStart,weekEnd.getTime() <= this.endDate.getTime() ?  weekEnd : this.endDate));
+
+                weekStart.setTime(weekEnd.getTime() + dayMilSecond);
+            }
+        }
+        else
+        if (this.modes[mode].equals("Month")){
+            for (Date monthStart = new Date(startDate.getTime()) ; monthStart.getTime() < this.endDate.getTime();) {
+                Date monthEnd = new Date(monthStart.getTime() + dayMilSecond * (getMonthDays(monthStart) - getDayOfMonth(monthStart)));
+
+                modeDates.add(new ModeDate("Month",monthStart,monthEnd.getTime() <= this.endDate.getTime() ? monthEnd : this.endDate));
+
+                monthStart.setTime(monthEnd.getTime() + dayMilSecond);
+            }
+        }
+        if (this.modes[mode].equals("All")){
+            modeDates.add(new ModeDate("All",this.startDate,this.endDate));
+        }
+
+        return modeDates;
     }
 
     private int getDayOfWeek(Date date){
@@ -126,7 +135,26 @@ public class DailyModeDateSelector {
         calendar.roll(Calendar.DATE,-1);
         return calendar.get(Calendar.DATE);
     }
+    //endregion
 
+    //region OnInitDailyInfoListen
+    public interface OnDateChangedListener{
+        void onDateChanged();
+    }
+
+    private OnDateChangedListener onDateChangedListener = null;
+
+    public void setOnInitDailyInfoListen(OnDateChangedListener onDateChangedListener) {
+        this.onDateChangedListener = onDateChangedListener;
+    }
+
+    private void invokeOnDateChanged(){
+        if (this.onDateChangedListener != null)
+            this.onDateChangedListener.onDateChanged();
+    }
+    //endregion
+
+    //region class:ModeDate
     /**
      * ModeDate类,存放类型下起止日期
      */
@@ -139,7 +167,14 @@ public class DailyModeDateSelector {
             this.startDate = new Date(startDate.getTime());
             this.endDate = new Date(endDate.getTime());
 
-            Log.i("ModeDate","-->>"+this.toString());
+            //Log.i("ModeDate","-->>"+this.toString());
+        }
+
+        public boolean isContain(long date){
+            if (startDate.getTime() <= date && endDate.getTime() >= date)
+                return true;
+            else
+                return false;
         }
 
         public String getStartDateString() {
@@ -155,4 +190,5 @@ public class DailyModeDateSelector {
             return new SimpleDateFormat("yyyy/MM/dd").format(this.startDate) + " : " + new SimpleDateFormat("yyyy/MM/dd").format(this.endDate);
         }
     }
+    //endregion
 }

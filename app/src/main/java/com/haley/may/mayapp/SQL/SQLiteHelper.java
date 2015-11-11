@@ -95,29 +95,10 @@ public class SQLiteHelper {
         return date;
     }
 
-    public void getDaily(int userid,DailyModel model){
+    public List<String[]> getDaily(int userid,String start,String end){
         SQLiteDatabase db;
         Cursor cursor;
-        int count = 0;
-
-        db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath + this.dataBaseName, null);
-        cursor = db.rawQuery("select id, date((select datetime(date,'unixepoch'))) as date,breakfast,lunch,dinner,other from Daily where user_id=? and  order by date desc", new String[]{Integer.toString(userid)});count = cursor.getCount();
-        if ( cursor != null ) {
-            if ( cursor.moveToFirst() ){
-                do {
-                    model.AddDailyInfo(cursor.getString(cursor.getColumnIndex("id")),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
-                }while ( cursor.moveToNext() );
-            }
-        }
-
-        Log.i("SQLite", "DailyCount-->>" + Integer.toString(count));
-
-        db.close();
-    }
-
-    public void getDaily(int userid,String start,String end,DailyModel model){
-        SQLiteDatabase db;
-        Cursor cursor;
+        List<String[]> list = new ArrayList<String[]>();
         int count = 0;
 
         Log.i("SQLite", "DailyCount-->>" + start +"    " + end);
@@ -129,7 +110,8 @@ public class SQLiteHelper {
         if ( cursor != null ) {
             if ( cursor.moveToFirst() ){
                 do {
-                    model.AddDailyInfo(cursor.getString(cursor.getColumnIndex("id")),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
+                    list.add(new String[]{cursor.getString(cursor.getColumnIndex("id")),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5)});
+                    //model.AddDailyInfo(cursor.getString(cursor.getColumnIndex("id")),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
                 }while ( cursor.moveToNext() );
             }
         }
@@ -137,6 +119,8 @@ public class SQLiteHelper {
         Log.i("SQLite", "DailyCount-->>" + Integer.toString(count));
 
         db.close();
+
+        return list;
     }
 
     public void UpdateDaily(String id,String field,String value){
@@ -275,6 +259,14 @@ public class SQLiteHelper {
         db.close();
 
         return count;
+    }
+
+    public void updatePacketName(int userid,int packetID,int name){
+        SQLiteDatabase db;
+        Cursor cursor;
+
+        db = SQLiteDatabase.openOrCreateDatabase(this.dataBasePath + this.dataBaseName, null);
+        db.execSQL("update Packet set packet=? where id=? and user_id=?", new Object[]{name,Integer.toString(packetID), Integer.toString(userid)});
     }
 
     public void deletePacket(int userid,int packetID){

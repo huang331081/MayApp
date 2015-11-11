@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.haley.may.mayapp.MainActivity">
+    <item android:id="@+id/actionbar_daily_mode" app:actionViewClass="android.widget.Spinner" android:title="mode"
+        app:showAsAction="always"/>
+    <item android:id="@+id/actionbar_daily_date" app:actionViewClass="android.widget.Spinner" android:title="mode"
+        app:showAsAction="always"/>
+</menu>

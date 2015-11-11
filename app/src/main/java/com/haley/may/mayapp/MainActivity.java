@@ -1,6 +1,7 @@
 package com.haley.may.mayapp;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.baidu.lbsapi.BMapManager;
+import com.baidu.lbsapi.MKGeneralListener;
+import com.baidu.mapapi.SDKInitializer;
 import com.haley.may.mayapp.Manager.MayFragmentManager;
 
 public class MainActivity extends AppCompatActivity
@@ -47,7 +51,6 @@ public class MainActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
 
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -58,8 +61,11 @@ public class MainActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
 
-        this.getSupportActionBar().hide();
+        //haley:
+        //this.getSupportActionBar().hide();
+        this.getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.WeatherBadDrawable));
         //((DrawerLayout)findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.START);
+
     }
 
     @Override
@@ -67,36 +73,45 @@ public class MainActivity extends AppCompatActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (position > beforePosition)
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.anim_fragment_in_bottom, R.anim.anim_fragment_out_bottom)
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
-        else if (position < beforePosition)
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.anim_fragment_in_up, R.anim.anim_fragment_out_up)
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
-        else
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.anim_fragment_in_alpha, R.anim.anim_fragment_out_alpha)
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .commit();
+
+        //translate的变化方式
+//        if (position > beforePosition)
+//            fragmentManager.beginTransaction()
+//                    .setCustomAnimations(R.anim.anim_fragment_in_bottom, R.anim.anim_fragment_out_bottom)
+//                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+//                    .commit();
+//        else if (position < beforePosition)
+//            fragmentManager.beginTransaction()
+//                    .setCustomAnimations(R.anim.anim_fragment_in_up, R.anim.anim_fragment_out_up)
+//                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+//                    .commit();
+//        else
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+//                    .commit();
 
         beforePosition = position;
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+//        switch (number) {
+//            case 1:
+//                mTitle = getString(R.string.title_section1);
+//                break;
+//            case 2:
+//                mTitle = getString(R.string.title_section2);
+//                break;
+//            case 3:
+//                mTitle = getString(R.string.title_section3);
+//                break;
+//        }
+
+        //haley:
+        mTitle = MayFragmentManager.getInstance().getTitles().get(number-1);
     }
 
     public void restoreActionBar() {
@@ -104,16 +119,24 @@ public class MainActivity extends AppCompatActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+
+        //haley:
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i("MainActivity","onCreateOptionsMenu-->>");
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+
+            //haley:
+            MayFragmentManager.getInstance().getShowingFragment().initActionBar(getMenuInflater(),menu);
+            //getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }
@@ -164,6 +187,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            MayFragmentManager.getInstance().initViews(inflater);
             View roowView = MayFragmentManager.getInstance().getView(this.getArguments().getInt(ARG_SECTION_NUMBER),inflater,container);
             return roowView;
         }

@@ -1,7 +1,12 @@
 package com.haley.may.mayapp.Model.Daily;
 
+import android.util.Log;
+
 import com.haley.may.mayapp.SQL.SQLiteHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,43 +14,69 @@ import java.util.List;
  */
 public class DailyStatistics {
 
-    private int user_id;
-    private float threeMeals = 0;
-    private float others = 0;
+    private List<CostInfo> weekCost = new ArrayList<CostInfo>();
+    private List<CostInfo> monthCost = new ArrayList<CostInfo>();
 
-    public DailyStatistics(int user_id){
-        this.user_id = user_id;
+    public DailyStatistics(int userid,List<DailyModeDateSelector.ModeDate> weekModeDates,List<DailyModeDateSelector.ModeDate> monthModeDates){
 
+        for (DailyModeDateSelector.ModeDate week : weekModeDates){
+            this.weekCost.add(new CostInfo(userid,week.getStartDateString(),week.getEndDateString()));
+        }
+
+        for (DailyModeDateSelector.ModeDate month : monthModeDates){
+            this.monthCost.add(new CostInfo(userid,month.getStartDateString(),month.getEndDateString()));
+        }
     }
 
-    public float getThreeMeals() {
-        return threeMeals;
+    public List<CostInfo> getWeekCost() {
+        return weekCost;
     }
 
-    public float getOthers() {
-        return others;
+    public List<CostInfo> getMonthCost() {
+        return monthCost;
     }
 
-    public float getAll(){
-        return threeMeals + others;
-    }
+    public class CostInfo{
+        private String startDate;
+        private String endDate;
+        private float value = 0;
+        private List<Float> values = new ArrayList<Float>();
 
-    public void init(List<DailyInfo> infos){
-        this.threeMeals = 0;
-        this.others = 0;
+        public CostInfo(int userid,String start,String end) {
+            this.startDate = start;
+            this.endDate = end;
+            this.value = 0;
 
-        for (DailyInfo info : infos){
-            if (info.getOther().equals(""))
-                continue;
-
-            String[] strings = info.getOther().split(";");
-            for (String string : strings){
-                String[] labels = string.split("=");
-                if (labels[0].equals("早饭") || labels[0].equals("中饭") || labels[0].equals("晚饭"))
-                    this.threeMeals += Float.parseFloat(labels[1]);
+            List<String[]> infos = SQLiteHelper.getInstance().getDaily(userid, startDate, endDate);
+            for (String[] info : infos) {
+                if (info[5] != null && info[5].equals("") == false ) {
+                    String[] strings = info[5].split("；");
+                    float f = 0;
+                    for (String value : strings) {
+                        f +=Float.parseFloat(value.split("=")[1]);
+                    }
+                    values.add(f);
+                    value += f;
+                }
                 else
-                    this.others += Float.parseFloat(labels[1]);
+                    values.add(0.0f);
             }
+        }
+
+        public float getValue() {
+            return value;
+        }
+
+        public List<Float> getValues() {
+            return values;
+        }
+
+        public String getWeekString(){
+            return this.startDate.split(" ")[0].substring(5)+ "\r\n"+this.endDate.split(" ")[0].substring(5);
+        }
+
+        public String getMonthString(){
+            return this.startDate.split(" ")[0].substring(0,7);
         }
     }
 }

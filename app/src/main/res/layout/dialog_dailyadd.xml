@@ -10,6 +10,7 @@
         android:orientation="vertical">
         <EditText android:id="@+id/label"
             android:hint="请输入标签名"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="45dp" />
 
@@ -26,5 +27,5 @@
         android:focusableInTouchMode="true"
         android:layout_weight="1"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="250dp"></ListView>
 </LinearLayout>
