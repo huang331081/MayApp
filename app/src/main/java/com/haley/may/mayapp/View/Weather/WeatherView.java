@@ -11,8 +11,9 @@ import android.util.Xml;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.LinearLayout;
 
-import com.haley.may.mayapp.Manager.StyleManager;
+import com.haley.may.mayapp.Style.StyleManager;
 import com.haley.may.mayapp.R;
 import com.haley.may.mayapp.System.Public;
 

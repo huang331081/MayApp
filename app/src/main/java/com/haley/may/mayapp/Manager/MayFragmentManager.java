@@ -1,20 +1,12 @@
 package com.haley.may.mayapp.Manager;
 
-import android.app.Application;
-import android.app.Fragment;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.baidu.mapapi.SDKInitializer;
-import com.baidu.nplatform.comapi.map.gesture.Base;
-import com.haley.may.mayapp.Interface.IStyleChange;
-import com.haley.may.mayapp.R;
-import com.haley.may.mayapp.View.Base.BaseContainer;
+import com.haley.may.mayapp.Base.BaseContainer;
 import com.haley.may.mayapp.View.Daily.DailyContainer;
 import com.haley.may.mayapp.View.Map.MapContainer;
 import com.haley.may.mayapp.View.Record.RecordContainer;
@@ -108,14 +100,7 @@ public class MayFragmentManager {
             }
         }
 
-        fragmentInfos.get(position).container.setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
         return fragmentInfos.get(position).container;
-    }
-
-    public void setStyle(){
-        for (int i=0 ;i<this.fragmentInfos.size();i++)
-            if (this.fragmentInfos.get(i).container != null)
-                fragmentInfos.get(i).container.setStyle(StyleManager.getInstance().getPreviousStyle(), StyleManager.getInstance().getStyle());
     }
     //endregion
 
@@ -138,7 +123,7 @@ public class MayFragmentManager {
     //endregion
 
 
-    //
+    //region class:FragmentInfo
     public class FragmentInfo{
         private String title;
         private BaseContainer container = null;
@@ -151,4 +136,5 @@ public class MayFragmentManager {
             this.container.initMenu(inflater,menu);
         }
     }
+    //endregion
 }

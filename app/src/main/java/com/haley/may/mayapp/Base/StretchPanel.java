@@ -1,4 +1,4 @@
-package com.haley.may.mayapp.View.Base;
+package com.haley.may.mayapp.Base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

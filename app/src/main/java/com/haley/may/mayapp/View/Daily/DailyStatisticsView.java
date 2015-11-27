@@ -3,6 +3,7 @@ package com.haley.may.mayapp.View.Daily;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,10 @@ import com.haley.may.mayapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
@@ -43,6 +47,20 @@ public class DailyStatisticsView extends LinearLayout {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.layout_dailystatistics, this);
 
+        this.setmModel(model);
+    }
+
+    public DailyStatisticsView(Context context, AttributeSet attributeSet){
+        super(context, attributeSet);
+        LayoutInflater.from(context).inflate(R.layout.layout_dailystatistics, this);
+
+
+        Log.i("DailyStatisticsView", "-->>register");
+    }
+
+
+
+    public void setmModel(DailyModel model){
         this.mModel = model;
         this.mModel.initStatistics();
 

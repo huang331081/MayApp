@@ -23,12 +23,10 @@ import com.haley.may.mayapp.Model.Daily.DailyInfo;
 import com.haley.may.mayapp.Model.Daily.DailyModel;
 import com.haley.may.mayapp.R;
 import com.haley.may.mayapp.System.Public;
-import com.haley.may.mayapp.View.Base.MayListView;
-import com.haley.may.mayapp.View.Base.StretchPanel;
+import com.haley.may.mayapp.Base.MayListView;
+import com.haley.may.mayapp.Base.StretchPanel;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

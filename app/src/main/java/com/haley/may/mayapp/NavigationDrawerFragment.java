@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.haley.may.mayapp.Base.BaseFragment;
 import com.haley.may.mayapp.Manager.MayFragmentManager;
 
 /**
@@ -31,7 +32,7 @@ import com.haley.may.mayapp.Manager.MayFragmentManager;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends BaseFragment {
 
     /**
      * Remember the position of the selected item.
@@ -271,7 +272,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         //Haley;
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setLogo(R.drawable.ic_drawer);
+        //actionBar.setLogo(R.drawable.ic_drawer);
     }
 
     private ActionBar getActionBar() {

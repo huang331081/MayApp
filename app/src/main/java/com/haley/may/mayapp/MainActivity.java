@@ -1,36 +1,26 @@
 package com.haley.may.mayapp;
 
 import android.app.Activity;
-import android.app.Application;
-import android.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toolbar;
 
-import com.baidu.lbsapi.BMapManager;
-import com.baidu.lbsapi.MKGeneralListener;
-import com.baidu.mapapi.SDKInitializer;
+import com.haley.may.mayapp.Base.BaseActivity;
 import com.haley.may.mayapp.Manager.MayFragmentManager;
+import com.haley.may.mayapp.NavigationDrawerFragment;
+import com.haley.may.mayapp.R;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -45,10 +35,15 @@ public class MainActivity extends AppCompatActivity
 
     private int beforePosition = 0;
 
+    private static MainActivity instance = null;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -60,12 +55,11 @@ public class MainActivity extends AppCompatActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-
         //haley:
         //this.getSupportActionBar().hide();
-        this.getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.WeatherBadDrawable));
+        //this.getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.WeatherBadDrawable));
         //((DrawerLayout)findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.START);
-
+        instance = this;
     }
 
     @Override

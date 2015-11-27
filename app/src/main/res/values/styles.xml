@@ -6,29 +6,31 @@
         <item name="actionBarStyle">@style/DefaultActionBarStyle</item>
         <item name="actionBarSize">40dp</item>
         <item name="windowActionBarOverlay">true</item>
-    </style>
-
-    <style name="NoTitleAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/DefaultBackColor</item>
     </style>
 
     <style name="DefaultActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@color/DefaultBackColor</item>
-        <item name="homeAsUpIndicator">@drawable/ic_drawer</item>
     </style>
-
-
 
 
     <drawable name="DefaultDrawable">@color/DefaultBackColor</drawable>
     <drawable name="WeatherGoodDrawable">@color/WeatherGoodBackColor</drawable>
     <drawable name="WeatherBadDrawable">@color/WeatherBadBackColor</drawable>
 
-    
+
     <color name="DefaultBackColor">#ffffffff</color>
     <color name="WeatherGoodBackColor">#ff0080ff</color>
     <color name="WeatherBadBackColor">#ff808080</color>
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

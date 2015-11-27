@@ -1,7 +1,6 @@
 package com.haley.may.mayapp.View.Daily;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,7 @@ import android.widget.ListView;
 
 import com.haley.may.mayapp.Model.Daily.DailyModel;
 import com.haley.may.mayapp.R;
-import com.haley.may.mayapp.View.Base.MayListView;
-import com.haley.may.mayapp.View.Daily.DailyInfoPanel;
+import com.haley.may.mayapp.Base.MayListView;
 
 /**
  * Created by lenovo on 2015/11/9.
@@ -28,8 +26,6 @@ public class DailyInfoView extends LinearLayout {
         mModel = model;
 
         this.initAdapter();
-
-
     }
 
     public void initAdapter(){
@@ -60,6 +56,33 @@ public class DailyInfoView extends LinearLayout {
                 return convertView;
             }
         });
+
+//        ListView listView = (ListView)this.findViewById(R.id.listViewDay);
+//        listView.setAdapter(new BaseAdapter() {
+//            @Override
+//            public int getCount() {
+//                return mModel.getDailyInfoList().size();
+//            }
+//
+//            @Override
+//            public Object getItem(int position) {
+//                return position;
+//            }
+//
+//            @Override
+//            public long getItemId(int position) {
+//                return position;
+//            }
+//
+//            @Override
+//            public View getView(int position, View convertView, ViewGroup parent) {
+//                if (convertView == null) {
+//                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_dailyinfoitem,parent);
+//                }
+//
+//                return convertView;
+//            }
+//        });
     }
 
     private void initButton(){

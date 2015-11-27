@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.haley.may.mayapp.Model.Daily.DailyModel;
 import com.haley.may.mayapp.Model.Record.RecordModel;
 import com.haley.may.mayapp.R;
-import com.haley.may.mayapp.View.Base.BaseContainer;
+import com.haley.may.mayapp.Base.BaseContainer;
 
 import java.util.Calendar;
 

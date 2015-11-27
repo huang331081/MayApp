@@ -1,23 +1,23 @@
-package com.haley.may.mayapp.View.Base;
+package com.haley.may.mayapp.Base;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.ListView;
 
 import com.haley.may.mayapp.System.Public;
 
 /**
- * Created by lenovo on 2015/10/28.
+ * Created by lenovo on 2015/10/14.
  */
-public class MayViewPager extends ViewPager {
+public class MayListView extends ListView {
 
-    public MayViewPager(Context context){
+    public MayListView(Context context) {
         super(context);
     }
 
-    public MayViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public MayListView(Context context,AttributeSet attributeSet){
+        super(context,attributeSet);
     }
 
     @Override

@@ -2,39 +2,26 @@ package com.haley.may.mayapp.View.Daily;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.haley.may.mayapp.Model.Daily.DailyModel;
 import com.haley.may.mayapp.Model.Daily.LabelCollection;
 import com.haley.may.mayapp.R;
-import com.haley.may.mayapp.System.Public;
-import com.haley.may.mayapp.View.Base.MayListView;
-import com.haley.may.mayapp.View.Base.StretchPanel;
 
 
 /**
@@ -55,7 +42,13 @@ public class DailyPacketView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.layout_dialypacket, this);
 
         this.init();
+    }
 
+    public DailyPacketView(Context context,AttributeSet attributeSet){
+        super(context,attributeSet);
+        LayoutInflater.from(context).inflate(R.layout.layout_dialypacket, this);
+
+        this.init();
     }
     //endregion
 

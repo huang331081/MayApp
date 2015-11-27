@@ -3,24 +3,43 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Spinner
-            android:id="@+id/spinnerMode"
-            android:layout_alignParentLeft="true"
-            android:layout_width="wrap_content"
-
-            android:layout_height="wrap_content"></Spinner>
-        <Spinner
-            android:id="@+id/spinnerDate"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></Spinner>
-    </RelativeLayout>
-
-    <com.haley.may.mayapp.View.Base.MayViewPager
+    <com.haley.may.mayapp.Base.MayViewPager
+        android:layout_weight="3"
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.haley.may.mayapp.View.Base.MayViewPager>
+        android:layout_height="match_parent"></com.haley.may.mayapp.Base.MayViewPager>
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <RelativeLayout
+            android:id="@+id/layoutStatistics"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/dailyinfo_content_bg_selector"
+            android:clickable="true">
+            <TextView
+                android:text="统计"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/layoutPakcet"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/dailyinfo_content_bg_selector"
+            android:clickable="true">
+            <TextView
+                android:text="分类"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
